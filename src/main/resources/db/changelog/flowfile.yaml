@@ -5,13 +5,44 @@ stages:
     - type: shell
       command: echo "Running flow file...."
 
-  Update:
-    actions: 
+  # Connect:
+  #   actions:
+  #   - type: liquibase
+  #     command: connect
+
+  Validate:
+    actions:
     - type: liquibase
       command: status
 
+  ReleaseLocks:
+    actions:
+    - type: liquibase
+      # if: ${RELEASE_LOCKS} == true"
+      command: release-locks
+
+  PolicyChecks:
+    actions:
+    - type: liquibase
+      command: checks run
+      cmdArgs: {
+        "changeset-filter": "pending",
+        "checks-scope": "changelog",
+        "checks-settings-file": "db/changelog/liquibase.checks-settings.conf"
+      }
+
+  Update:
+    actions:
     - type: liquibase
       command: update
+
+  # Rollback:
+  #   actions:
+  #   - type: liquibase
+  #     command: rollback-count
+  #     cmdArgs: {
+  #       "count": "100"
+  #     }
 
 endStage:
   actions:

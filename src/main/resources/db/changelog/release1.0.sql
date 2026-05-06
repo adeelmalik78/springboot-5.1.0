@@ -1,22 +1,22 @@
 --liquibase formatted sql
 
---changeset adeel:table1 stripComments:false
+--changeset adeel:users stripComments:false
 -- this is a comment
-create table table1 (
+create table users (
     id int,
     first_name varchar(50) not null,
     last_name varchar(50) not null,
     address1 varchar(50),
     address2 varchar(50),
     city varchar(30),
-    CONSTRAINT "xpk_table1" PRIMARY KEY (id), 
-    CONSTRAINT "xak_table1" UNIQUE (id,last_name) 
+    CONSTRAINT "xpk_users" PRIMARY KEY (id), 
+    CONSTRAINT "xak_users" UNIQUE (id,last_name) 
 )
---rollback drop table table1
+--rollback drop table users
 
---changeset adeel:table1_index
-create index xie01_table1 on table1 ( id, first_name, last_name, address1, address2, city );
---rollback drop index xie01_table1 
+--changeset adeel:users_index
+create index xie01_users on users ( id, first_name, last_name, address1, address2, city );
+--rollback drop index xie01_users 
 
 --changeset adeel:table2
 create table table2 (
@@ -49,12 +49,12 @@ CREATE TABLE person (
 create index xie03_person on person ( id, first_name, last_name );
 --rollback drop index xie03_person
 
---changeset adeel:fk_table1
-alter table table1 add constraint fk_table1 foreign key (id) references table2 (id);
---rollback alter table table1 drop constraint fk_table1;
+--changeset adeel:fk_users
+alter table users add constraint fk_users foreign key (id) references table2 (id);
+--rollback alter table users drop constraint fk_users;
 
 --changeset adeel:xfk_table2
-alter table table2 add constraint xfk_table2 foreign key (id) references table1 (id);
+alter table table2 add constraint xfk_table2 foreign key (id) references users (id);
 --rollback alter table table2 drop constraint xfk_table2;
 
 --changeset adeel:employee
@@ -82,13 +82,13 @@ INSERT INTO person (id,first_name,last_name)
 	VALUES (2,'Amy','Smith');
 --rollback DELETE FROM person WHERE id=2;
 
---changeset amalik:insert_roderick 
+--changeset amalik:insert_roderick_and_don 
 -- Let's create multiple INSERTs into this changeset!S
 INSERT INTO person (id,first_name,last_name) VALUES (3,'Roderick','Bowser');
 INSERT INTO person (id,first_name,last_name) VALUES (4,'Don','DeArmond III');
 --rollback DELETE FROM person WHERE id=3;
 
---changeset amalik:update_adeel
+--changeset amalik:update_id_1
 UPDATE person
 	SET first_name='Ryan', last_name='Campbell'
 	WHERE id=1;
